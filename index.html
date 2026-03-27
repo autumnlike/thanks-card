@@ -317,36 +317,35 @@
     </div>
   </div>
 
-  <!-- Setup mode: no members param -->
-  <div id="setupMode" style="display:none;">
-    <div class="section">
-      <div class="section-label">👥 メンバーを入力</div>
-      <p style="font-size:0.85rem;color:#888;margin-bottom:10px;">1行に1人ずつ名前を入力してください</p>
-      <textarea class="message-area" id="membersInput" placeholder="山田太郎&#10;鈴木花子&#10;田中一郎" style="height:160px;"></textarea>
+  <!-- To -->
+  <div class="section">
+    <div class="section-label" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>🎁 だれに送る？</span>
+      <button onclick="toggleSetup()" id="toggleSetupBtn" style="background:none;border:none;color:#9c27b0;font-size:0.8rem;cursor:pointer;font-family:inherit;font-weight:700;">メンバーを変更 ✏️</button>
     </div>
-    <div class="section">
-      <div class="section-label">🔗 共有URLを生成</div>
-      <div class="btn-row" style="margin-top:0;">
-        <button class="btn btn-preview" onclick="generateURL()">URLを生成</button>
+    <div id="recipientGrid" class="member-grid"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+      <span style="font-size:0.8rem;color:#aaa;white-space:nowrap;">または直接入力:</span>
+      <input type="text" class="sender-input" id="manualRecipient" placeholder="名前を入力" style="font-size:0.85rem;" oninput="onManualRecipient()">
+    </div>
+    <!-- Inline setup -->
+    <div id="setupPanel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed #e0e0e0;">
+      <p style="font-size:0.85rem;color:#888;margin-bottom:8px;">1行に1人ずつ名前を入力してください</p>
+      <textarea class="message-area" id="membersInput" placeholder="山田太郎&#10;鈴木花子&#10;田中一郎" style="height:120px;"></textarea>
+      <div class="btn-row" style="margin-top:10px;justify-content:space-between;">
+        <button class="btn btn-preview" onclick="applyMembers()" style="font-size:0.85rem;padding:8px 20px;">反映する</button>
+        <button class="btn" onclick="generateURL()" style="font-size:0.85rem;padding:8px 20px;background:linear-gradient(135deg,#9c27b0,#7b1fa2);color:#fff;">共有URLを生成 🔗</button>
       </div>
-      <div id="urlResult" style="display:none;margin-top:14px;">
-        <input type="text" class="sender-input" id="generatedURL" readonly style="font-size:0.8rem;cursor:pointer;" onclick="copyURL()">
-        <p style="font-size:0.8rem;color:#4caf50;text-align:center;margin-top:6px;" id="copyMsg"></p>
+      <div id="urlResult" style="display:none;margin-top:10px;">
+        <input type="text" class="sender-input" id="generatedURL" readonly style="font-size:0.75rem;cursor:pointer;" onclick="copyURL()">
+        <p style="font-size:0.8rem;color:#4caf50;text-align:center;margin-top:4px;" id="copyMsg"></p>
         <div class="btn-row">
-          <a class="btn btn-preview" id="previewLink" href="#" target="_blank" style="text-decoration:none;display:none;">画面を確認する →</a>
+          <a class="btn btn-preview" id="previewLink" href="#" target="_blank" style="text-decoration:none;display:none;font-size:0.85rem;padding:8px 20px;">画面を確認する →</a>
         </div>
       </div>
       <div class="error-msg" id="setupError"></div>
     </div>
   </div>
-
-  <!-- Card mode: has members param -->
-  <div id="cardMode" style="display:none;">
-    <!-- To -->
-    <div class="section">
-      <div class="section-label">🎁 だれに送る？</div>
-      <div class="member-grid" id="recipientGrid"></div>
-    </div>
 
     <!-- From -->
     <div class="section">
@@ -390,7 +389,6 @@
       </div>
       <div class="error-msg" id="errorMsg"></div>
     </div>
-  </div>
 </div>
 
 <canvas id="cardCanvas" width="800" height="500"></canvas>
@@ -398,21 +396,18 @@
 <script>
 // メンバーをクエリストリングから取得: ?members=名前1,名前2,名前3
 const params = new URLSearchParams(window.location.search);
+const SAMPLE_MEMBERS = ['山田太郎', '鈴木花子', '田中一郎'];
 const membersParam = params.get('members');
-const MEMBERS = membersParam
+let MEMBERS = membersParam
   ? membersParam.split(',').map(s => s.trim()).filter(Boolean)
-  : [];
+  : SAMPLE_MEMBERS;
 
 let selectedRecipient = '';
 let selectedTheme = 'cute';
 
-if (MEMBERS.length === 0) {
-  // Setup mode: メンバー入力 & URL生成
-  document.getElementById('setupMode').style.display = 'block';
-} else {
-  // Card mode: カード作成
-  document.getElementById('cardMode').style.display = 'block';
+function buildMemberButtons() {
   const grid = document.getElementById('recipientGrid');
+  grid.innerHTML = '';
   MEMBERS.forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'member-btn';
@@ -421,9 +416,37 @@ if (MEMBERS.length === 0) {
       document.querySelectorAll('.member-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       selectedRecipient = name;
+      document.getElementById('manualRecipient').value = '';
     };
     grid.appendChild(btn);
   });
+}
+buildMemberButtons();
+
+function onManualRecipient() {
+  const val = document.getElementById('manualRecipient').value.trim();
+  document.querySelectorAll('.member-btn').forEach(b => b.classList.remove('selected'));
+  selectedRecipient = val;
+}
+
+function toggleSetup() {
+  const panel = document.getElementById('setupPanel');
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    document.getElementById('membersInput').value = MEMBERS.join('\n');
+  }
+}
+
+function applyMembers() {
+  const input = document.getElementById('membersInput').value.trim();
+  if (!input) return;
+  const names = input.split('\n').map(s => s.trim()).filter(Boolean);
+  if (names.length === 0) return;
+  MEMBERS = names;
+  selectedRecipient = '';
+  buildMemberButtons();
+  document.getElementById('setupPanel').style.display = 'none';
 }
 
 function generateURL() {
