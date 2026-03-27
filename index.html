@@ -301,6 +301,9 @@
       <div id="urlResult" style="display:none;margin-top:14px;">
         <input type="text" class="sender-input" id="generatedURL" readonly style="font-size:0.8rem;cursor:pointer;" onclick="copyURL()">
         <p style="font-size:0.8rem;color:#4caf50;text-align:center;margin-top:6px;" id="copyMsg"></p>
+        <div class="btn-row">
+          <a class="btn btn-preview" id="previewLink" href="#" target="_blank" style="text-decoration:none;display:none;">画面を確認する →</a>
+        </div>
       </div>
       <div class="error-msg" id="setupError"></div>
     </div>
@@ -403,6 +406,9 @@ function generateURL() {
   const url = base + '?members=' + encodeURIComponent(names.join(','));
   document.getElementById('generatedURL').value = url;
   document.getElementById('urlResult').style.display = 'block';
+  const previewLink = document.getElementById('previewLink');
+  previewLink.href = url;
+  previewLink.style.display = 'inline-block';
   copyURL();
 }
 
