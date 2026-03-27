@@ -347,28 +347,28 @@
     </div>
   </div>
 
-    <!-- From -->
-    <div class="section">
-      <div class="section-label">✍️ あなたの名前</div>
-      <input type="text" class="sender-input" id="senderName" placeholder="名前を入力してください">
-    </div>
-
-    <!-- Theme -->
-    <div class="section">
-      <div class="section-label">🎨 デザインを選ぼう</div>
-      <div class="theme-grid" id="themeGrid">
-        <button class="theme-btn selected" data-theme="cute" onclick="selectTheme('cute', this)">
-          <span class="theme-emoji">🌸</span>かわいい
-        </button>
-        <button class="theme-btn" data-theme="heartful" onclick="selectTheme('heartful', this)">
-          <span class="theme-emoji">🧡</span>ハートフル
-        </button>
-        <button class="theme-btn" data-theme="rock" onclick="selectTheme('rock', this)">
-          <span class="theme-emoji">🎸</span>ロック
-        </button>
-        <button class="theme-btn" data-theme="nature" onclick="selectTheme('nature', this)">
-          <span class="theme-emoji">🌿</span>ナチュラル
-        </button>
+    <!-- From & Theme -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="section" style="margin-bottom:0;">
+        <div class="section-label">✍️ あなたの名前</div>
+        <input type="text" class="sender-input" id="senderName" placeholder="名前を入力してください">
+      </div>
+      <div class="section" style="margin-bottom:0;">
+        <div class="section-label">🎨 デザインを選ぼう</div>
+        <div class="theme-grid" id="themeGrid">
+          <button class="theme-btn selected" data-theme="cute" onclick="selectTheme('cute', this)">
+            <span class="theme-emoji">🌸</span>かわいい
+          </button>
+          <button class="theme-btn" data-theme="heartful" onclick="selectTheme('heartful', this)">
+            <span class="theme-emoji">🧡</span>ハートフル
+          </button>
+          <button class="theme-btn" data-theme="rock" onclick="selectTheme('rock', this)">
+            <span class="theme-emoji">🎸</span>ロック
+          </button>
+          <button class="theme-btn" data-theme="nature" onclick="selectTheme('nature', this)">
+            <span class="theme-emoji">🌿</span>ナチュラル
+          </button>
+        </div>
       </div>
     </div>
 
