@@ -168,8 +168,8 @@
   .theme-btn[data-theme="elegant"] { background: linear-gradient(135deg, #1a237e, #0d47a1); color: #ffd700; }
   .theme-btn[data-theme="elegant"].selected { border-color: #ffd700; }
 
-  .theme-more-row { display:none; }
-  .theme-more-row.open { display:contents; }
+  .theme-more-row { display:contents; }
+  .theme-more-row.closed { display:none; }
 
   .toggle-more-btn {
     grid-column: 1 / -1;
@@ -379,7 +379,6 @@
           <button class="theme-btn" data-theme="heartful" onclick="selectTheme('heartful', this)"><span class="theme-emoji">🧡</span>ハートフル</button>
           <button class="theme-btn" data-theme="rock" onclick="selectTheme('rock', this)"><span class="theme-emoji">🎸</span>ロック</button>
           <button class="theme-btn" data-theme="nature" onclick="selectTheme('nature', this)"><span class="theme-emoji">🌿</span>ナチュラル</button>
-          <button class="toggle-more-btn" id="toggleMoreBtn" onclick="toggleMoreThemes()">もっと見る ▼</button>
           <div class="theme-more-row" id="moreThemes">
             <button class="theme-btn" data-theme="cafe" onclick="selectTheme('cafe', this)"><span class="theme-emoji">☕</span>カフェ</button>
             <button class="theme-btn" data-theme="sunset" onclick="selectTheme('sunset', this)"><span class="theme-emoji">🌅</span>サンセット</button>
@@ -392,6 +391,7 @@
             <button class="theme-btn" data-theme="monotone" onclick="selectTheme('monotone', this)"><span class="theme-emoji">🖤</span>モノトーン</button>
             <button class="theme-btn" data-theme="elegant" onclick="selectTheme('elegant', this)"><span class="theme-emoji">🎩</span>エレガント</button>
           </div>
+          <button class="toggle-more-btn" id="toggleMoreBtn" onclick="toggleMoreThemes()">閉じる ▲</button>
         </div>
       </div>
     </div>
@@ -507,9 +507,9 @@ function selectTheme(theme, el) {
 function toggleMoreThemes() {
   const more = document.getElementById('moreThemes');
   const btn = document.getElementById('toggleMoreBtn');
-  const isOpen = more.classList.contains('open');
-  more.classList.toggle('open');
-  btn.textContent = isOpen ? 'もっと見る ▼' : '閉じる ▲';
+  const isClosed = more.classList.contains('closed');
+  more.classList.toggle('closed');
+  btn.textContent = isClosed ? '閉じる ▲' : 'もっと見る ▼';
 }
 
 document.getElementById('messageText').addEventListener('input', function() {
